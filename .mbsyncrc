@@ -1,0 +1,67 @@
+IMAPAccount personal
+Host 127.0.0.1
+Port 1143
+User imcole@pm.me
+#Here you enter a command to retrieve your password
+PassCmd "gpg2 -q -d ~/.authinfo.gpg | awk 'FNR == 1 {print $8}'"
+SSLType STARTTLS
+SSLVersions TLSv1.2
+CertificateFile /home/icole/.cert/protonmail.crt
+
+IMAPStore personal-remote
+Account personal
+
+MaildirStore personal-local
+Path ~/.mail/Personal/
+Inbox ~/.mail/Personal/INBOX/
+
+Channel personal-inbox
+Far :personal-remote:
+Near :personal-local:
+Patterns "INBOX"
+Create Both
+Expunge Both
+SyncState *
+
+Channel personal-archive
+Far :personal-remote:"Archive"
+Near :personal-local:"Archive"
+Create Both
+Expunge Both
+SyncState *
+
+Channel personal-drafts
+Far :personal-remote:"Drafts"
+Near :personal-local:"Drafts"
+Create Both
+Expunge Both
+SyncState *
+
+Channel personal-sent
+Far :personal-remote:"Sent"
+Near :personal-local:"Sent"
+Create Both
+Expunge Both
+SyncState *
+
+Channel personal-trash
+Far :personal-remote:"Trash"
+Near :personal-local:"Trash"
+Create Both
+Expunge Both
+SyncState *
+
+Channel personal-spam
+Far :personal-remote:"Spam"
+Near :personal-local:"Spam"
+Create Both
+Expunge Both
+SyncState *
+
+Group personal
+Channel personal-inbox
+Channel personal-archive
+Channel personal-drafts
+Channel personal-sent
+Channel personal-trash
+Channel personal-spam
