@@ -89,14 +89,20 @@
 
 (setq global-auto-revert-mode t)
 
-(setq org-agenda-block-separator nil)
-(setq org-habit-following-days 1)
-(setq org-habit-show-habits t)
-(setq org-habit-preceding-days 90)
-(setq org-habit-show-habits-only-for-today t)
-
 (after! org
+  (map! (:leader
+         (:prefix "m"
+          (:prefix "c"
+           :desc "Start Pomodoro" "p" #'org-pomodoro
+           ))))
+
   (add-to-list 'org-modules 'org-habit)
+  (setq org-agenda-block-separator nil)
+  (setq org-habit-following-days 1)
+  (setq org-habit-show-habits t)
+  (setq org-habit-preceding-days 90)
+  (setq org-habit-show-habits-only-for-today t)
+  (setq org-agenda-skip-scheduled-if-done t)
   (add-hook 'org-after-todo-state-change-hook #'org-save-all-org-buffers))
 
 (after! mu4e
@@ -145,16 +151,6 @@
 
 ;; Config copied from System Crafters 5 Org Roam Hacks video
 ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
-(use-package! org-roam
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/org/roam")
-  (org-roam-completion-everywhere t)
-  :config
-  (require 'org-roam-dailies) ;; Ensure the keymap is available
-  (org-roam-db-autosync-mode))
-
 (after! org-roam
 (map! (:leader
        (:prefix "n"
@@ -164,6 +160,9 @@
          :desc "Capture task" "t" #'my/org-roam-capture-task
          :desc "Capture inbox item" "b" #'my/org-roam-capture-inbox
          :desc "Find project" "p" #'my/org-roam-find-project))))
+
+
+(setq org-roam-open-buffer-on-find-file t)
 
 (defun org-roam-node-insert-immediate (arg &rest args)
   (interactive "P")
@@ -184,7 +183,7 @@
 
 (defun my/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (append (my/org-roam-list-notes-by-tag "Project") '("~/org"))))
+  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))))
 
 ;; Build the agenda list the first time for the session
 (my/org-roam-refresh-agenda-list)
