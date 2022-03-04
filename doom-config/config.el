@@ -162,7 +162,7 @@
          :desc "Find project" "p" #'my/org-roam-find-project))))
 
 
-(setq org-roam-open-buffer-on-find-file t)
+(setq +org-roam-open-buffer-on-find-file nil)
 
 (defun org-roam-node-insert-immediate (arg &rest args)
   (interactive "P")
@@ -183,7 +183,7 @@
 
 (defun my/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (my/org-roam-list-notes-by-tag "Project"))))
+  (setq org-agenda-files (append (my/org-roam-list-notes-by-tag "Project") '("~/org"))))
 
 ;; Build the agenda list the first time for the session
 (my/org-roam-refresh-agenda-list)
@@ -253,8 +253,14 @@ capture was not aborted."
                    (file-truename (buffer-file-name)))
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
-(add-to-list 'org-after-todo-state-change-hook
-             (lambda ()
-               (when (equal org-state "DONE")
-                 (my/org-roam-copy-todo-to-today))))
+;; (add-to-list 'org-after-todo-state-change-hook
+;;              (lambda ()
+;;                (when (equal org-state "DONE")
+;;                  (my/org-roam-copy-todo-to-today))))
 )
+
+
+(setq org-caldav-url "https://mycloud.iancole.me/remote.php/dav/calendars/icole")
+(setq org-caldav-calendar-id "personal")
+(setq org-caldav-inbox "~/org/calendar.org")
+(setq org-icalendar-timezone "America/Los_Angeles")

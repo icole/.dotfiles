@@ -56,3 +56,5 @@
 (package! smudge)
 (package! catppuccin-theme
   :recipe (:host github :repo "pspiagicw/catppuccin-emacs"))
+(package! org-caldav
+  :recipe (:host github :repo "whirm/org-caldav" :branch "sync-todos"))
