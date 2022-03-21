@@ -99,9 +99,10 @@
   (setq org-agenda-block-separator nil)
   (setq org-habit-following-days 1)
   (setq org-habit-show-habits t)
-  (setq org-habit-preceding-days 90)
+  (setq org-habit-preceding-days 14)
   (setq org-habit-show-habits-only-for-today t)
   (setq org-agenda-skip-scheduled-if-done t)
+  (setq org-agenda-show-future-repeats nil)
   (add-hook 'org-after-todo-state-change-hook #'org-save-all-org-buffers))
 
 (after! mu4e
