@@ -49,7 +49,8 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! org-pomodoro)
+(package! org-pomodoro
+  :recipe (:host github :repo "borwickatuw/quieter-org-pomodoro"))
 (package! org-habits-plus
   :recipe (:host github :repo "myshevchuk/org-habit-plus"))
 (package! org-caldav)
