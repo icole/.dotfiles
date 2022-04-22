@@ -59,3 +59,6 @@
   :recipe (:host github :repo "pspiagicw/catppuccin-emacs"))
 (package! org-caldav
   :recipe (:host github :repo "whirm/org-caldav" :branch "sync-todos"))
+(package! request)
+(package! emacsql)
+(package! wallabag :recipe (:host github :repo "chenyanming/wallabag.el" :files ("*.el" "*.alist" "*.css")))

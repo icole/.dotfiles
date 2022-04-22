@@ -99,7 +99,7 @@
   (setq org-agenda-block-separator nil)
   (setq org-habit-following-days 1)
   (setq org-habit-show-habits t)
-  (setq org-habit-preceding-days 14)
+  (setq org-habit-preceding-days 30)
   (setq org-habit-show-habits-only-for-today t)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-show-future-repeats nil)
@@ -152,7 +152,7 @@
 ;; Config copied from System Crafters 5 Org Roam Hacks video
 ;; https://systemcrafters.net/build-a-second-brain-in-emacs/5-org-roam-hacks/
 (after! org-roam
-(map! (:leader
+  (map! (:leader
        (:prefix "n"
         :desc "Dalies map" "d" #'org-roam-dailies-map
         (:prefix "r"

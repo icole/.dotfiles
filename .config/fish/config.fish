@@ -1,6 +1,6 @@
 if status is-interactive
 end
 
-set -x PATH $PATH ~/.emacs.d/bin ~/.local/bin ./node_modules/.bin ~/.dotnet/tools
+set -U fish_user_paths ~/.local/bin ./node_modules/.bin $fish_user_paths
 
-starship init fish | source
+oh-my-posh init fish --config ~/.poshthemes/blueish.omp.json | source
