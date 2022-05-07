@@ -88,6 +88,9 @@
 
 (setq global-auto-revert-mode t)
 
+(setq auth-sources
+    '((:source "~/.authinfo.gpg")))
+
 (after! org
   (map! (:leader
          (:prefix "m"
