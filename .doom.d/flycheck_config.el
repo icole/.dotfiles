@@ -273,9 +273,9 @@
   :config
   (setq wallabag-host (plist-get (nth 0 (auth-source-search :max 1)) :host)) ;; wallabag server host name
   (setq wallabag-username  (plist-get (nth 0 (auth-source-search :max 1)) :user)) ;; username
-  (setq wallabag-password  (funcall (plist-get (nth 0 (auth-source-search :max 1)) :secret))) ;; password
+  (setq wallabag-password  (d)(plist-get (nth 0 (auth-source-search :max 1)) :secret)) ;; password
   (setq wallabag-clientid (plist-get (nth 1 (auth-source-search :max 2)) :user)) ;; created with API clients management
-  (setq wallabag-secret (funcall (plist-get (nth 1 (auth-source-search :max 2)) :secret))) ;; created with API clients management
+  (setq wallabag-secret (plist-get (nth 1 (auth-source-search :max 2)) :secret)) ;; created with API clients management
   ;; (setq wallabag-db-file "~/OneDrive/Org/wallabag.sqlite") ;; optional, default is saved to ~/.emacs.d/.cache/wallabag.sqlite
   ;; (run-with-timer 0 3540 'wallabag-request-token) ;; optional, auto refresh token, token should refresh every hour
   )
