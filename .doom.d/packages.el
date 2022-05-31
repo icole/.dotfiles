@@ -62,3 +62,4 @@
 (package! request)
 (package! emacsql)
 (package! wallabag :recipe (:host github :repo "chenyanming/wallabag.el" :files ("*.el" "*.alist" "*.css")))
+(package! shfmt)

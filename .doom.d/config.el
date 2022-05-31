@@ -94,6 +94,8 @@
 (setq auth-sources
     '((:source "~/.authinfo.gpg")))
 
+(add-hook 'sh-mode-hook 'shfmt-on-save-mode)
+
 (after! org
   (map! (:leader
          (:prefix "m"
