@@ -150,6 +150,12 @@
       org-msg-convert-citation t)
   (org-msg-mode))
 
+(setq json-reformat:indent-width 2)
+
+(use-package company
+  :hook (prog-mode . company-mode))
+
+
 (after! gnutls
   (add-to-list 'gnutls-trustfiles
     (expand-file-name "~/.cert/protonmail.smtp.crt"))
