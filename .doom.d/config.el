@@ -111,6 +111,7 @@
   (setq org-habit-show-habits-only-for-today t)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-show-future-repeats nil)
+  (setq org-agenda-todo-ignore-with-date t)
   (add-hook 'org-after-todo-state-change-hook #'org-save-all-org-buffers))
 
 (after! mu4e
@@ -195,6 +196,7 @@
 
         (defun my/org-roam-refresh-agenda-list ()
         (interactive)
+        (org-revert-all-org-buffers)
         (setq org-agenda-files (append (my/org-roam-list-notes-by-tag "Project") '("~/org"))))
 
         ;; Build the agenda list the first time for the session
