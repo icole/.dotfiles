@@ -71,13 +71,6 @@
 (setq org-duration-format (quote h:mm))
 (setq org-agenda-files (quote ("~/org")))
 
-;; (setq org-capture-templates
-;;       `(("h" "Habit"
-;;          entry (file "~/org/habits.org")
-;;          "* TODO %? :Habit:\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n"
-;;          :kill-buffer t)
-;;         ))
-
 (bind-key "C-c C-y" 'org-todo-yesterday)
 
 (cl-loop for file in '("/usr/local/bin/fish" "/usr/bin/fish")
@@ -90,9 +83,12 @@
 (setq global-auto-revert-mode t)
 
 (setq json-reformat:indent-width 2)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 (setq auth-sources
     '((:source "~/.authinfo.gpg")))
+
+(add-hook 'sh-mode-hook 'shfmt-on-save-mode)
 
 (after! org
   (map! (:leader
@@ -100,7 +96,12 @@
           (:prefix "c"
            :desc "Start Pomodoro" "p" #'org-pomodoro
            ))))
-
+  (setq org-capture-templates
+        `(("h" "Habit"
+           entry (file "~/org/roam/20220222120745-habits.org")
+           "* TODO %? :Habit:\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n"
+           :kill-buffer t)
+          ))
   (add-to-list 'org-modules 'org-habit)
   (setq org-agenda-block-separator nil)
   (setq org-habit-following-days 1)
@@ -109,6 +110,7 @@
   (setq org-habit-show-habits-only-for-today t)
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-show-future-repeats nil)
+  (setq org-agenda-todo-ignore-with-date t)
   (add-hook 'org-after-todo-state-change-hook #'org-save-all-org-buffers))
 
 (after! mu4e
@@ -187,6 +189,7 @@
 
         (defun my/org-roam-refresh-agenda-list ()
         (interactive)
+        (org-revert-all-org-buffers)
         (setq org-agenda-files (append (my/org-roam-list-notes-by-tag "Project") '("~/org"))))
 
         ;; Build the agenda list the first time for the session
@@ -263,19 +266,14 @@
         ;;                  (my/org-roam-copy-todo-to-today))))
 )
 
-(setq org-caldav-url "https://mycloud.iancole.me/remote.php/dav/calendars/icole")
-(setq org-caldav-calendar-id "personal")
-(setq org-caldav-inbox "~/org/calendar.org")
-(setq org-icalendar-timezone "America/Los_Angeles")
-
 (use-package wallabag
   :defer t
   :config
   (setq wallabag-host (plist-get (nth 0 (auth-source-search :max 1)) :host)) ;; wallabag server host name
   (setq wallabag-username  (plist-get (nth 0 (auth-source-search :max 1)) :user)) ;; username
-  (setq wallabag-password  (d)(plist-get (nth 0 (auth-source-search :max 1)) :secret)) ;; password
+  (setq wallabag-password  (funcall (plist-get (nth 0 (auth-source-search :max 1)) :secret))) ;; password
   (setq wallabag-clientid (plist-get (nth 1 (auth-source-search :max 2)) :user)) ;; created with API clients management
-  (setq wallabag-secret (plist-get (nth 1 (auth-source-search :max 2)) :secret)) ;; created with API clients management
+  (setq wallabag-secret (funcall (plist-get (nth 1 (auth-source-search :max 2)) :secret))) ;; created with API clients management
   ;; (setq wallabag-db-file "~/OneDrive/Org/wallabag.sqlite") ;; optional, default is saved to ~/.emacs.d/.cache/wallabag.sqlite
   ;; (run-with-timer 0 3540 'wallabag-request-token) ;; optional, auto refresh token, token should refresh every hour
   )
