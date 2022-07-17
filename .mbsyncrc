@@ -51,12 +51,12 @@ Expunge Both
 SyncState *
 
 Channel personal-spam
+Far :personal-remote:"Spam"
 Near :personal-local:"Spam"
 Create Both
 Expunge Both
 SyncState *
 
-Far :personal-remote:"Spam"
 Group personal
 Channel personal-inbox
 Channel personal-archive
