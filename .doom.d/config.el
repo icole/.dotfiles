@@ -122,6 +122,7 @@
         mu4e-refile-folder "/Personal/Archive"
         mu4e-use-fancy-chars t
         mu4e-view-show-images t
+        mu4e-alert-disable-notifications t
         shr-color-visible-luminance-min 80)
 
   (add-to-list 'mu4e-bookmarks
