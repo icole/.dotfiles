@@ -96,12 +96,12 @@
           (:prefix "c"
            :desc "Start Pomodoro" "p" #'org-pomodoro
            ))))
-  (setq org-capture-templates
-        `(("h" "Habit"
-           entry (file "~/org/roam/20220222120745-habits.org")
-           "* TODO %? :Habit:\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n"
-           :kill-buffer t)
-          ))
+  ;; (setq org-capture-templates
+  ;;       `(("h" "Habit"
+  ;;          entry (file "~/org/roam/20220222120745-habits.org")
+  ;;          "* TODO %? :Habit:\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n"
+  ;;          :kill-buffer t)
+  ;;         ))
   (add-to-list 'org-modules 'org-habit)
   (setq org-agenda-block-separator nil)
   (setq org-habit-following-days 1)
@@ -122,8 +122,9 @@
         mu4e-refile-folder "/Personal/Archive"
         mu4e-use-fancy-chars t
         mu4e-view-show-images t
-        mu4e-alert-disable-notifications t
         shr-color-visible-luminance-min 80)
+
+  (add-hook 'after-init-hook 'mu4e-alert-disable-notifications)
 
   (add-to-list 'mu4e-bookmarks
     '( :name  "Unread Today"
@@ -167,3 +168,12 @@
   ;; (setq wallabag-db-file "~/OneDrive/Org/wallabag.sqlite") ;; optional, default is saved to ~/.emacs.d/.cache/wallabag.sqlite
   ;; (run-with-timer 0 3540 'wallabag-request-token) ;; optional, auto refresh token, token should refresh every hour
   )
+
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))

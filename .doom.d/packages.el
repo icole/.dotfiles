@@ -55,11 +55,14 @@
   :recipe (:host github :repo "myshevchuk/org-habit-plus"))
 (package! org-caldav)
 (package! smudge)
+(package! vscode-dark-plus-theme)
 (package! catppuccin-theme
-  :recipe (:host github :repo "pspiagicw/catppuccin-emacs"))
+  :recipe (:host github :repo "catppuccin/emacs"))
 (package! org-caldav
   :recipe (:host github :repo "whirm/org-caldav" :branch "sync-todos"))
 (package! request)
 (package! emacsql)
 (package! wallabag :recipe (:host github :repo "chenyanming/wallabag.el" :files ("*.el" "*.alist" "*.css")))
 (package! shfmt)
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
