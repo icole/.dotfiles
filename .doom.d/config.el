@@ -82,8 +82,17 @@
 
 (setq global-auto-revert-mode t)
 
+(setq-default tab-width 2)
 (setq json-reformat:indent-width 2)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(setq mocha-snippets-use-fat-arrows t)
+(setq mocha-snippets-add-space-after-function-keyword t)
+
+(use-package web-mode
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2))
 
 (setq auth-sources
     '((:source "~/.authinfo.gpg")))
