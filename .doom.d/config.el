@@ -178,11 +178,24 @@
   ;; (run-with-timer 0 3540 'wallabag-request-token) ;; optional, auto refresh token, token should refresh every hour
   )
 
+;; https://github.com/zerolfx/copilot.el/issues/40
 ;; accept completion from copilot and fallback to company
+(defun my-tab ()
+  (interactive)
+    (or (copilot-accept-completion)
+        (indent-for-tab-command)))
+
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
          ("C-<tab>" . 'copilot-accept-completion-by-word)
-         :map copilot-completion-map
-         ("<tab>" . 'copilot-accept-completion)
-         ("TAB" . 'copilot-accept-completion)))
+         :map company-active-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)
+         :map company-mode-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)))
+
+(after! copilot
+  (setq copilot-node-executable "~/.volta/tools/image/node/14.21.1/bin/node")
+)
