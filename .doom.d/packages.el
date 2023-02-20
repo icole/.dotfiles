@@ -49,6 +49,8 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+(unpin! straight)
+(unpin! geiser)
 (package! org-pomodoro
   :recipe (:host github :repo "borwickatuw/quieter-org-pomodoro"))
 (package! org-habits-plus

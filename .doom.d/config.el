@@ -73,7 +73,7 @@
 
 (bind-key "C-c C-y" 'org-todo-yesterday)
 
-(cl-loop for file in '("/usr/local/bin/bash" "/usr/bin/bash")
+(cl-loop for file in '("/usr/local/bin/zsh" "/usr/bin/zsh")
          when (file-exists-p file)
          do (progn
               (setq shell-file-name file)
@@ -137,8 +137,12 @@
 
   (add-to-list 'mu4e-bookmarks
     '( :name  "Unread Today"
-       :query "flag:unread AND NOT flag:trashed AND date:today..now"
+       :query "flag:unread AND NOT flag:trashed AND date:today..now AND maildir:/Personal/INBOX"
        :key   ?o))
+  (add-to-list 'mu4e-bookmarks
+    '( :name  "Unread Inbox"
+       :query "flag:unread AND NOT flag:trashed AND maildir:/Personal/INBOX"
+       :key   ?i))
 
   ;; Get mail
   (setq mu4e-get-mail-command "mbsync personal"
