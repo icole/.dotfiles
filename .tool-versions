@@ -1,5 +1,5 @@
 ruby 3.1.2
-nodejs lts
+nodejs 18.15.0
 yarn 1.22.19
 python 3.10.3
 pnpm 7.18.1

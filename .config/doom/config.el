@@ -37,9 +37,9 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 14)
-      doom-big-font (font-spec :family "CaskaydiaCove Nerd Font" :size 24)
-      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font Mono" :size 14))
+;; (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 14)
+;;       doom-big-font (font-spec :family "CaskaydiaCove Nerd Font" :size 24)
+;;       doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font Mono" :size 14))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -73,7 +73,7 @@
 
 (bind-key "C-c C-y" 'org-todo-yesterday)
 
-(cl-loop for file in '("/usr/local/bin/bash" "/usr/bin/bash")
+(cl-loop for file in '("/usr/local/bin/zsh" "/usr/bin/zsh")
          when (file-exists-p file)
          do (progn
               (setq shell-file-name file)
@@ -82,8 +82,52 @@
 
 (setq global-auto-revert-mode t)
 
+(setq-default tab-width 2)
 (setq json-reformat:indent-width 2)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(setq mocha-snippets-use-fat-arrows t)
+(setq mocha-snippets-add-space-after-function-keyword t)
+
+;; Use rjsx-mode for js files
+(add-to-list 'auto-mode-alist '("\\.js\\'"    . rjsx-mode))
+
+;; use eslint from node modules dicetory
+(add-hook 'prog-mode-hook 'flycheck-mode)
+(defun my/use-eslint-from-node-modules ()
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory)
+                "node_modules"))
+         (eslint (and root
+                      (expand-file-name "node_modules/eslint/bin/eslint.js"
+                                        root))))
+    (when (and eslint (file-executable-p eslint))
+      (setq-local flycheck-javascript-eslint-executable eslint))))
+(add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
+
+;; Tide setup
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+;;  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+(setq tide-completion-ignore-case t)
+;; formats the buffer before saving
+;;(add-hook 'before-save-hook 'tide-format-before-save)
+(add-hook 'js2-mode-hook #'setup-tide-mode)
+(add-hook 'rjsx-mode-hook #'setup-tide-mode)
+;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
+(setq tide-format-options
+      '(:indentSize 2 :tabSize 2))
+
+(use-package web-mode
+  :custom
+  (web-mode-markup-indent-offset 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2))
 
 (setq auth-sources
     '((:source "~/.authinfo.gpg")))
@@ -128,8 +172,12 @@
 
   (add-to-list 'mu4e-bookmarks
     '( :name  "Unread Today"
-       :query "flag:unread AND NOT flag:trashed AND date:today..now"
+       :query "flag:unread AND NOT flag:trashed AND date:today..now AND maildir:/Personal/INBOX"
        :key   ?o))
+  (add-to-list 'mu4e-bookmarks
+    '( :name  "Unread Inbox"
+       :query "flag:unread AND NOT flag:trashed AND maildir:/Personal/INBOX"
+       :key   ?i))
 
   ;; Get mail
   (setq mu4e-get-mail-command "mbsync personal"
@@ -169,11 +217,24 @@
   ;; (run-with-timer 0 3540 'wallabag-request-token) ;; optional, auto refresh token, token should refresh every hour
   )
 
+;; https://github.com/zerolfx/copilot.el/issues/40
 ;; accept completion from copilot and fallback to company
+(defun my-tab ()
+  (interactive)
+    (or (copilot-accept-completion)
+        (indent-for-tab-command)))
+
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
          ("C-<tab>" . 'copilot-accept-completion-by-word)
-         :map copilot-completion-map
-         ("<tab>" . 'copilot-accept-completion)
-         ("TAB" . 'copilot-accept-completion)))
+         :map company-active-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)
+         :map company-mode-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)))
+
+(after! copilot
+  (setq copilot-node-executable "~/.asdf/shims/node")
+)
