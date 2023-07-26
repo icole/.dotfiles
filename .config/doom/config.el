@@ -87,9 +87,6 @@
 (setq mocha-snippets-use-fat-arrows t)
 (setq mocha-snippets-add-space-after-function-keyword t)
 
-;; Use rjsx-mode for js files
-(add-to-list 'auto-mode-alist '("\\.js\\'"    . rjsx-mode))
-
 ;; use eslint from node modules dicetory
 (add-hook 'prog-mode-hook 'flycheck-mode)
 (defun my/use-eslint-from-node-modules ()

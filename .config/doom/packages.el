@@ -51,6 +51,9 @@
 
 (unpin! straight)
 (unpin! geiser)
+(unpin! flycheck)
+(package! flycheck
+  :recipe (:host github :repo "flycheck/flycheck"))
 (package! org-pomodoro
   :recipe (:host github :repo "borwickatuw/quieter-org-pomodoro"))
 (package! org-habits-plus
