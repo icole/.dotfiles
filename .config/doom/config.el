@@ -37,14 +37,14 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-;; (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 14)
-;;       doom-big-font (font-spec :family "CaskaydiaCove Nerd Font" :size 24)
-;;       doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font Mono" :size 14))
+(setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 14)
+      doom-big-font (font-spec :family "CaskaydiaCove Nerd Font" :size 24)
+      doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font Mono" :size 14))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-one)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -100,25 +100,10 @@
       (setq-local flycheck-javascript-eslint-executable eslint))))
 (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
 
-;; Tide setup
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-;;  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  (company-mode +1))
-;; aligns annotation to the right hand side
-(setq company-tooltip-align-annotations t)
-(setq tide-completion-ignore-case t)
-;; formats the buffer before saving
-;;(add-hook 'before-save-hook 'tide-format-before-save)
-(add-hook 'js2-mode-hook #'setup-tide-mode)
-(add-hook 'rjsx-mode-hook #'setup-tide-mode)
-;;(flycheck-add-next-checker 'javascript-eslint 'javascript-tide 'append)
-(setq tide-format-options
-      '(:indentSize 2 :tabSize 2))
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :config
+  (customize-set-variable 'js2-include-node-externs t))
 
 (use-package web-mode
   :custom
@@ -216,22 +201,29 @@
 
 ;; https://github.com/zerolfx/copilot.el/issues/40
 ;; accept completion from copilot and fallback to company
-(defun my-tab ()
-  (interactive)
-    (or (copilot-accept-completion)
-        (indent-for-tab-command)))
+;; (defun my-tab ()
+;;   (interactive)
+;;     (or (copilot-accept-completion)
+;;         (indent-for-tab-command)))
 
+;; (use-package! copilot
+;;   :hook (prog-mode . copilot-mode)
+;;   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+;;          ("C-<tab>" . 'copilot-accept-completion-by-word)
+;;          :map company-active-map
+;;          ("<tab>" . 'my-tab)
+;;          ("TAB" . 'my-tab)
+;;          :map company-mode-map
+;;          ("<tab>" . 'my-tab)
+;;          ("TAB" . 'my-tab)))
+;; accept completion from copilot and fallback to company
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
-  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
-         ("C-<tab>" . 'copilot-accept-completion-by-word)
-         :map company-active-map
-         ("<tab>" . 'my-tab)
-         ("TAB" . 'my-tab)
-         :map company-mode-map
-         ("<tab>" . 'my-tab)
-         ("TAB" . 'my-tab)))
-
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
 (after! copilot
   (setq copilot-node-executable "~/.volta/bin/node")
 )
