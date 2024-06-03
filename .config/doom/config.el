@@ -187,18 +187,6 @@
     (expand-file-name "~/.cert/protonmail.smtp.crt"))
 )
 
-(use-package wallabag
-  :defer t
-  :config
-  (setq wallabag-host (plist-get (nth 0 (auth-source-search :max 1)) :host)) ;; wallabag server host name
-  (setq wallabag-username  (plist-get (nth 0 (auth-source-search :max 1)) :user)) ;; username
-  (setq wallabag-password  (funcall (plist-get (nth 0 (auth-source-search :max 1)) :secret))) ;; password
-  (setq wallabag-clientid (plist-get (nth 1 (auth-source-search :max 2)) :user)) ;; created with API clients management
-  (setq wallabag-secret (funcall (plist-get (nth 1 (auth-source-search :max 2)) :secret))) ;; created with API clients management
-  ;; (setq wallabag-db-file "~/OneDrive/Org/wallabag.sqlite") ;; optional, default is saved to ~/.emacs.d/.cache/wallabag.sqlite
-  ;; (run-with-timer 0 3540 'wallabag-request-token) ;; optional, auto refresh token, token should refresh every hour
-  )
-
 ;; https://github.com/zerolfx/copilot.el/issues/40
 ;; accept completion from copilot and fallback to company
 ;; (defun my-tab ()
@@ -227,3 +215,18 @@
 (after! copilot
   (setq copilot-node-executable "~/.volta/bin/node")
 )
+
+(add-to-list 'exec-path (expand-file-name "~/go/bin"))
+
+(define-derived-mode hbs-mode web-mode "Handlebars mode" "Major mode for handlebars")
+(add-to-list 'auto-mode-alist '("\\.hbs\\'" . hbs-mode))
+
+(with-eval-after-load 'lsp-mode
+     (add-to-list 'lsp-language-id-configuration
+       '(hbs-mode . "hbs"))
+     (lsp-register-client
+      ;; Git clone language server from https://github.com/lifeart/ember-language-server/tree/component-context-info-origin
+      ;; And build it
+       (make-lsp-client :new-connection (lsp-stdio-connection (list "node" (expand-file-name "~/Workspace/ember-language-server/lib/start-server.js") "--stdio"))
+                        :activation-fn (lsp-activate-on "hbs")
+                        :server-id 'ember-language-server)))
