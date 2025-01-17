@@ -213,20 +213,61 @@
               ("C-TAB" . 'copilot-accept-completion-by-word)
               ("C-<tab>" . 'copilot-accept-completion-by-word)))
 (after! copilot
-  (setq copilot-node-executable "~/.volta/bin/node")
+  (setq copilot-node-executable "~/.asdf/shims/node")
 )
 
 (add-to-list 'exec-path (expand-file-name "~/go/bin"))
 
+;;;###autoload
+(define-derived-mode gts-mode typescript-mode "GTS"
+  "Major mode for editing Glimmer TypeScript files."
+  (when (treesit-available-p)
+    (condition-case nil
+        (progn
+          (treesit-parser-create 'glimmer-typescript)
+          (treesit-parser-create 'glimmer)
+         (treesit-major-mode-setup))
+      (error (message "Failed to initialize glimmer-ts support - falling back to basic mode"))))
+
+  ;; Ensure typescript decorators are highlighted
+  (font-lock-add-keywords nil '(("@\\([A-Za-z]+\\)" . font-lock-type-face))))
+
+(add-to-list 'auto-mode-alist '("\\.gts\\'" . gts-mode))
+
 (define-derived-mode hbs-mode web-mode "Handlebars mode" "Major mode for handlebars")
 (add-to-list 'auto-mode-alist '("\\.hbs\\'" . hbs-mode))
 
-(with-eval-after-load 'lsp-mode
-     (add-to-list 'lsp-language-id-configuration
-       '(hbs-mode . "hbs"))
-     (lsp-register-client
+
+;; LSP configuration
+(after! lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(gts-mode . "typescript"))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection "glint-language-server")
+    :major-modes '(gts-mode)
+    :server-id 'glint))
+
+  (add-to-list 'lsp-language-id-configuration
+               '(hbs-mode . "hbs"))
+  (lsp-register-client
       ;; Git clone language server from https://github.com/lifeart/ember-language-server/tree/component-context-info-origin
       ;; And build it
-       (make-lsp-client :new-connection (lsp-stdio-connection (list "node" (expand-file-name "~/Workspace/ember-language-server/lib/start-server.js") "--stdio"))
-                        :activation-fn (lsp-activate-on "hbs")
-                        :server-id 'ember-language-server)))
+       (make-lsp-client :new-connection (lsp-stdio-connection (list "node" "/home/icole/Workspace/ember-language-server/bin/ember-language-server.js" "--stdio"))
+                        :major-modes '(hbs-mode gts-mode)
+                        :priority -1  ; Lower priority than Glint
+                         :add-on? t
+                         :server-id 'ember-ls)))
+
+;; Enable LSP for GTS files
+(add-hook! 'gts-mode-hook #'lsp!)
+
+;;;;; treesit-auto
+
+(use-package treesit-auto
+  :init
+  (setq treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
