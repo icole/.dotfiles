@@ -2,5 +2,6 @@ ruby 3.2.2
 nodejs 18.15.0
 yarn 1.22.19
 python 3.10.3
-pnpm 8.6.1
+pnpm 9.4.0
 dotnet-core 7.0.100
+golang 1.22.4
