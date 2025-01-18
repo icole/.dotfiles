@@ -112,16 +112,16 @@
   (web-mode-code-indent-offset 2))
 
 (setq auth-sources
-    '((:source "~/.authinfo.gpg")))
+      '((:source "~/.authinfo.gpg")))
 
 (add-hook 'sh-mode-hook 'shfmt-on-save-mode)
 
 (after! org
   (map! (:leader
          (:prefix "m"
-          (:prefix "c"
-           :desc "Start Pomodoro" "p" #'org-pomodoro
-           ))))
+                  (:prefix "c"
+                   :desc "Start Pomodoro" "p" #'org-pomodoro
+                   ))))
   ;; (setq org-capture-templates
   ;;       `(("h" "Habit"
   ;;          entry (file "~/org/roam/20220222120745-habits.org")
@@ -153,13 +153,13 @@
   (add-hook 'after-init-hook 'mu4e-alert-disable-notifications)
 
   (add-to-list 'mu4e-bookmarks
-    '( :name  "Unread Today"
-       :query "flag:unread AND NOT flag:trashed AND date:today..now AND maildir:/Personal/INBOX"
-       :key   ?o))
+               '( :name  "Unread Today"
+                  :query "flag:unread AND NOT flag:trashed AND date:today..now AND maildir:/Personal/INBOX"
+                  :key   ?o))
   (add-to-list 'mu4e-bookmarks
-    '( :name  "Unread Inbox"
-       :query "flag:unread AND NOT flag:trashed AND maildir:/Personal/INBOX"
-       :key   ?i))
+               '( :name  "Unread Inbox"
+                  :query "flag:unread AND NOT flag:trashed AND maildir:/Personal/INBOX"
+                  :key   ?i))
 
   ;; Get mail
   (setq mu4e-get-mail-command "mbsync personal"
@@ -175,68 +175,59 @@
 
   (setq mail-user-agent 'mu4e-user-agent)
   (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
-      org-msg-startup "hidestars indent inlineimages"
-      org-msg-default-alternatives '((new . (text html))
-                                     (reply-to-html . (text html))
-                                     (reply-to-text . (text)))
-      org-msg-convert-citation t)
+        org-msg-startup "hidestars indent inlineimages"
+        org-msg-default-alternatives '((new . (text html))
+                                       (reply-to-html . (text html))
+                                       (reply-to-text . (text)))
+        org-msg-convert-citation t)
   (org-msg-mode))
 
 (after! gnutls
   (add-to-list 'gnutls-trustfiles
-    (expand-file-name "~/.cert/protonmail.smtp.crt"))
-)
+               (expand-file-name "~/.cert/protonmail.smtp.crt"))
+  )
 
 ;; https://github.com/zerolfx/copilot.el/issues/40
 ;; accept completion from copilot and fallback to company
-;; (defun my-tab ()
-;;   (interactive)
-;;     (or (copilot-accept-completion)
-;;         (indent-for-tab-command)))
+(defun my-tab ()
+  (interactive)
+  (or (copilot-accept-completion)
+      (indent-for-tab-command)))
 
-;; (use-package! copilot
-;;   :hook (prog-mode . copilot-mode)
-;;   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
-;;          ("C-<tab>" . 'copilot-accept-completion-by-word)
-;;          :map company-active-map
-;;          ("<tab>" . 'my-tab)
-;;          ("TAB" . 'my-tab)
-;;          :map company-mode-map
-;;          ("<tab>" . 'my-tab)
-;;          ("TAB" . 'my-tab)))
-;; accept completion from copilot and fallback to company
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
-  :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map company-active-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)
+         :map company-mode-map
+         ("<tab>" . 'my-tab)
+         ("TAB" . 'my-tab)))
+
 (after! copilot
   (setq copilot-node-executable "~/.asdf/shims/node")
-)
+  )
 
 (add-to-list 'exec-path (expand-file-name "~/go/bin"))
 
-;;;###autoload
-(define-derived-mode gts-mode typescript-mode "GTS"
-  "Major mode for editing Glimmer TypeScript files."
-  (when (treesit-available-p)
-    (condition-case nil
-        (progn
-          (treesit-parser-create 'glimmer-typescript)
-          (treesit-parser-create 'glimmer)
-         (treesit-major-mode-setup))
-      (error (message "Failed to initialize glimmer-ts support - falling back to basic mode"))))
+;; ;;;###autoload
+;; (define-derived-mode gts-mode typescript-mode "GTS"
+;;   "Major mode for editing Glimmer TypeScript files."
+;;   (when (treesit-available-p)
+;;     (condition-case nil
+;;         (progn
+;;           (treesit-parser-create 'glimmer)
+;;           (treesit-parser-create 'glimmer-typescript)
+;;           (treesit-major-mode-setup))
+;;       (error (message "Failed to initialize glimmer-ts support - falling back to basic mode"))))
 
-  ;; Ensure typescript decorators are highlighted
-  (font-lock-add-keywords nil '(("@\\([A-Za-z]+\\)" . font-lock-type-face))))
+;;   ;; Ensure typescript decorators are highlighted
+;;   (font-lock-add-keywords nil '(("@\\([A-Za-z]+\\)" . font-lock-type-face))))
 
-(add-to-list 'auto-mode-alist '("\\.gts\\'" . gts-mode))
-
-(define-derived-mode hbs-mode web-mode "Handlebars mode" "Major mode for handlebars")
-(add-to-list 'auto-mode-alist '("\\.hbs\\'" . hbs-mode))
-
+;; (add-to-list 'auto-mode-alist '("\\.gts\\'" . gts-mode))
+;;(define-derived-mode hbs-mode web-mode "Handlebars mode" "Major mode for handlebars")
+;;(add-to-list 'auto-mode-alist '("\\.hbs\\'" . hbs-mode))
 
 ;; LSP configuration
 (after! lsp-mode
@@ -247,27 +238,42 @@
    (make-lsp-client
     :new-connection (lsp-stdio-connection "glint-language-server")
     :major-modes '(gts-mode)
+
     :server-id 'glint))
 
   (add-to-list 'lsp-language-id-configuration
                '(hbs-mode . "hbs"))
   (lsp-register-client
-      ;; Git clone language server from https://github.com/lifeart/ember-language-server/tree/component-context-info-origin
-      ;; And build it
-       (make-lsp-client :new-connection (lsp-stdio-connection (list "node" "/home/icole/Workspace/ember-language-server/bin/ember-language-server.js" "--stdio"))
-                        :major-modes '(hbs-mode gts-mode)
-                        :priority -1  ; Lower priority than Glint
-                         :add-on? t
-                         :server-id 'ember-ls)))
+   ;; Git clone language server from https://github.com/lifeart/ember-language-server/tree/component-context-info-origin
+   ;; And build it
+   (make-lsp-client :new-connection (lsp-stdio-connection (list "node" "/Users/icole/Workspace/ember-language-server/bin/ember-language-server.js" "--stdio"))
+                    :major-modes '(hbs-mode gts-mode)
+                    :priority -1  ; Lower priority than Glint
+                    :add-on? t
+                    :server-id 'ember-ls)))
 
 ;; Enable LSP for GTS files
-(add-hook! 'gts-mode-hook #'lsp!)
+;; (add-hook! 'gts-mode-hook #'lsp!)
 
-;;;;; treesit-auto
-
-(use-package treesit-auto
-  :init
-  (setq treesit-auto-install 'prompt)
+(use-package polymode
+  :commands (polymode poly-hostmode poly-innermode)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  ;; 1) Define a host mode for TypeScript
+  (define-hostmode pm-gts-typescript-hostmode
+    :mode 'typescript-mode)
+
+  ;; 2) Define an innermode for the <template> block
+  (define-innermode pm-gts-template-innermode
+    :mode 'handlebars-mode              ;; or 'handlebars-mode if you prefer
+    :head-matcher "<template>"
+    :tail-matcher "</template>"
+    :head-mode 'body
+    :tail-mode 'body)
+
+  ;; 3) Tie them together in a single polymode
+  (define-polymode pm-polymode-gts
+    :hostmode 'pm-gts-typescript-hostmode
+    :innermodes '(pm-gts-template-innermode))
+
+  ;; 4) Associate .gts files with this polymode
+  (add-to-list 'auto-mode-alist '("\\.gts\\'" . pm-polymode-gts)))
