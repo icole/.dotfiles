@@ -1,0 +1,6 @@
+# Pull in the active Omadora theme's mako colors (follows theme switches),
+# then apply portable overrides on top.
+include=~/.config/omadora/current/theme/mako.ini
+
+# Tighter gap from the screen edge (core.ini default is 20)
+outer-margin=8

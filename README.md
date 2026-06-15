@@ -43,6 +43,10 @@ Stow-linked overrides (layer on top of Omadora's defaults in `~/.local/share/oma
   status glyphs at 18px / tray icons at 14px.
 - **`.config/autostart/org.signal.Signal.desktop`** — start Signal minimized to the tray on
   login (requires enabling Signal's in-app "minimize to system tray" setting once).
+- **`.config/mako/config`** — notification daemon: `include`s the active theme's mako colors
+  (so theme switches still apply) and overrides `outer-margin=8` for a tighter gap from the
+  screen edge. On a fresh Omadora install this path is a symlink Omadora creates at install
+  time; if `stow` reports a conflict there, `rm ~/.config/mako/config` and re-stow.
 
 ### Per-machine (NOT auto-linked)
 
@@ -57,8 +61,5 @@ Stow-linked overrides (layer on top of Omadora's defaults in `~/.local/share/oma
 
 ### Manual tweaks not tracked here
 
-- **mako notification spacing** (`outer-margin=8`): lives in the active Omadora *theme* file
-  (`~/.config/omadora/current/theme/mako.ini`), so it's theme-coupled. Re-add after install:
-  add `outer-margin=8` under the `include=` line, then `makoctl reload`.
 - **Antigravity icons / .desktop**: app-install specific (hardcoded `~/opt` paths), set up
   per machine.
